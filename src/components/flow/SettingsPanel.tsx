@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Node } from '@xyflow/react';
-import { ArrowLeft, MessageSquare } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -8,10 +8,11 @@ import { Textarea } from '@/components/ui/textarea';
 interface SettingsPanelProps {
   node: Node;
   onUpdateNode: (nodeId: string, data: any) => void;
+  onDeleteNode: (nodeId: string) => void;
   onClose: () => void;
 }
 
-export function SettingsPanel({ node, onUpdateNode, onClose }: SettingsPanelProps) {
+export function SettingsPanel({ node, onUpdateNode, onDeleteNode, onClose }: SettingsPanelProps) {
   const [text, setText] = useState((node.data as any)?.text || '');
 
   // Update local state when node changes
@@ -73,14 +74,26 @@ export function SettingsPanel({ node, onUpdateNode, onClose }: SettingsPanelProp
           </p>
         </div>
 
-        {/* Additional settings can be added here in the future */}
+        {/* Delete Node */}
         <div className="space-y-2">
-          <Label className="text-sm font-medium text-muted-foreground">
-            Advanced Settings
+          <Label className="text-sm font-medium text-destructive">
+            Danger Zone
           </Label>
-          <div className="text-xs text-muted-foreground p-3 bg-muted/30 rounded-lg border-2 border-dashed border-muted-foreground/20">
-            Delays, conditions, and other advanced options will be available in future updates.
-          </div>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => {
+              onDeleteNode(node.id);
+              onClose();
+            }}
+            className="w-full"
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Delete Node
+          </Button>
+          <p className="text-xs text-muted-foreground">
+            This action cannot be undone. All connections to this node will be removed.
+          </p>
         </div>
       </div>
 

@@ -77,6 +77,12 @@ export function ChatbotFlowBuilder() {
     );
   }, [setNodes]);
 
+  // Delete node and its connections
+  const deleteNode = useCallback((nodeId: string) => {
+    setNodes((nodes) => nodes.filter((node) => node.id !== nodeId));
+    setEdges((edges) => edges.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
+  }, [setNodes, setEdges]);
+
   // Add new node to canvas
   const addNode = useCallback((type: string, position: { x: number; y: number }) => {
     const id = `${type}-${Date.now()}`;
@@ -134,6 +140,7 @@ export function ChatbotFlowBuilder() {
     <SettingsPanel 
       node={selectedNode} 
       onUpdateNode={updateNodeData}
+      onDeleteNode={deleteNode}
       onClose={() => setSelectedNode(null)}
     />
   ) : (
